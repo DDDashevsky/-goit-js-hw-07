@@ -4,38 +4,64 @@ import { galleryItems } from './gallery-items.js';
 console.log(galleryItems);
 
 // -------//
-const gallery = document.querySelector('.gallery')
-
-
-
+const container = document.querySelector('.gallery');
+const gallery = createGallery();
+container.insertAdjacentHTML('beforeend', gallery);
 
 function createGallery() {
-    for (const item of galleryItems) {
-        const markup = document.createElement('li');
-        markup.innerHTML = `<div class="gallery__item">
-  <a class="gallery__link" href="large-image.jpg">
-    <img
-      class="gallery__image"
-      src="${item.preview}"
-      data-source="${item.original}"
-      alt="Image description"
-    />
-  </a>
-</div>`;
-        gallery.append(markup);
-    }
+  return galleryItems
+    .map(({ original, preview, description }) => {
+      return `
+    <div class="gallery__item">
+   <a class="gallery__link" href="${original}">
+     <img
+     class="gallery__image"
+     src="${preview}"
+     data-source="${original}"
+     alt="${description}"
+     />
+     </a>
+     </div>`;
+    })
+    .join('');
 }
+console.log(gallery);
 
-gallery.addEventListener('click', openPicture);
+/* function createGallery() {
+  for (const item of galleryItems) {
+    const markup = document.createElement('div');
+    markup.innerHTML = `<div class="gallery__item">
+    <div class="gallery__item">
+   <a class="gallery__link" href="${item.original}">
+     <img
+     class="gallery__image"
+     src="${item.preview}"
+     data-source="${item.original}"
+     alt="${item.description}"
+     />
+     </a>
+     </div>;`;
 
-function openPicture(evt) {
-    evt.preventDefault()
-    // if (evt.target.nodeName !== 'img') {
-    //     return;
-    // }
+    container.append(markup);
+  }
+}
+createGallery(); */
 
-    evt.target.src = evt.target.dataset.source
-    console.log(evt.target)
-};
+container.addEventListener('click', openImage);
 
-createGallery()
+function openImage(evt) {
+  evt.preventDefault();
+
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
+  const overlay = basicLightbox.create(
+    `<img src="${evt.target.dataset.source}" alt="">`
+  );
+  overlay.show();
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Escape') {
+      overlay.close();
+    }
+  });
+}
