@@ -56,7 +56,9 @@ function openImage(evt) {
     return;
   }
   const overlay = basicLightbox.create(
-    `<img src="${evt.target.dataset.source}" alt="">`
+    `<img src="${evt.target.dataset.source}" alt="${evt.target.getAttribute(
+      'alt'
+    )}">`
   );
   overlay.show();
   document.addEventListener('keydown', e => {
