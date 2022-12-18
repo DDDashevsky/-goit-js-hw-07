@@ -29,6 +29,7 @@ function createGallery() {
 
 let gallery = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
+  captionDelay: 250,
   animationSpeed: 150,
 });
 
